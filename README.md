@@ -147,7 +147,7 @@ I also attempted a monthly revenue forecast using a Ridge regression
 model with lag features — using last month's production and price 
 to predict next month's revenue.
 
-![Monthly Revenue Forecast (Ridge)](Figure_5.png)
+![Monthly Revenue Forecast (Ridge)](images/Figure_5.png)
 *The model captures the general seasonal trend but struggles with 
 sharp month-to-month swings. This is expected given that monthly 
 revenues depend on contract structure, which is not publicly available.*
