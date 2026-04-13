@@ -61,18 +61,18 @@ The raw ENTSO-E files presented a practical problem: generation data before 2022
 
 ### Step 2 — EDA
 Before any modeling, I looked at distributions, seasonality, and correlations. 
-![Price and Production Distributions](Hist_1.png)
+![Price and Production Distributions](images/Hist_1.png)
 The price distribution (left) is heavily right-skewed with a "fat tail," indicating high volatility and extreme price spikes during the 2022 crisis.
 
-![Monthly Price Variation](Hist_2.png)
-![Monthly Production Variation](Hist_3.png)
+![Monthly Price Variation](images/Hist_2.png)
+![Monthly Production Variation](images/Hist_3.png)
 * **Production (`Hist_3`):** Confirms the "hydrological footprint" of Romania, with peak production in spring (March-May) due to snowmelt and lower volumes in late summer.
 * **Price (`Hist_2`):** Shows that while production peaks in spring, prices do not always drop proportionally. The highest outliers are recorded in August and September, suggesting that supply-side hydro production is not the only price driver.
 
-![Annual Price Evolution](Hist_4.png)
+![Annual Price Evolution](images/Hist_4.png)
 Comparing these two boxplots, we observe that while energy prices migrated to a completely different scale in 2022, hydro production remained within historical bounds. This highlights a decoupling of price from local production costs during the energy crisis.
 
-![Correlation Matrix](Hist_5.png)
+![Correlation Matrix](images/Hist_5.png)
 The correlation matrix showed that hydro production has a weak negative correlation (-0.25) with electricity prices. This was the main observation that motivated adding more variables.
 
 ### Step 3 — OLS Regression (statsmodels)
@@ -87,7 +87,7 @@ The results are statistically limited by the small sample (10 years), but the mo
 
 ### Step 4 — Clustering (KMeans)
 Using monthly data (132 observations), I applied KMeans with 3 clusters on production, price, and exchange rate. The algorithm unsupervised-ly isolated 2022 as a separate regime — all 12 months of 2022 ended up in a single cluster characterized by extreme prices (avg. 1,232 RON/MWh), confirming the geopolitical shock as a distinct market state.
-![](Figure_2.png)
+![](images/Figure_2.png)
 
 ### Step 5 — Machine Learning (Price Forecasting)
 I compared 8 models predicting the monthly Day-Ahead Market price using the full energy mix as features:
@@ -129,7 +129,7 @@ XGBoost + TTF (tuned):  MAE = ~65   RON/MWh | R² ≈ 0.84
 
 The feature importance in the final model confirms that **TTF gas is the dominant predictor** of Romanian electricity prices, which is consistent with the Merit Order mechanism — gas-fired plants set the marginal price in a large share of hours.
 
-![](Figure_3.png)
+![](images/Figure_3.png)
 
 ### Step 8 — Hidroelectrica Revenue Analysis
 
@@ -137,7 +137,7 @@ Using the predicted electricity prices, I estimated what Hidroelectrica's
 revenues *would have been* if all production had been sold at the spot 
 market price (PZU), and compared this against the actual reported revenues.
 
-![Revenue: Reported vs. Spot Estimate](Figure_4.png)
+![Revenue: Reported vs. Spot Estimate](images/Figure_4.png)
 *In 2022, the spot market estimate (blue) far exceeds reported revenues 
 (purple), suggesting a significant portion of output was already sold 
 under long-term bilateral contracts at pre-crisis prices. From 2023 
