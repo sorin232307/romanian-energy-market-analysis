@@ -4,7 +4,7 @@
 
 ## About This Project
 
-This project started as a university assignment for a Software Packages course (Statistics, Year 2, ASE Bucharest) and grew into something I found genuinely interesting.
+This project started as a university assignment for Software Packages course (Statistics, Year 2, ASE Bucharest) and grew into something I found genuinely interesting.
 
 The central question is simple: **what actually drives electricity prices in Romania?** Is it how much water flows through Hidroelectrica's turbines, or is something else going on?
 
