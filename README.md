@@ -70,7 +70,6 @@ The price distribution (left) is heavily right-skewed with a "fat tail," indicat
 * **Price (`Hist_2`):** Shows that while production peaks in spring, prices do not always drop proportionally. The highest outliers are recorded in August and September, suggesting that supply-side hydro production is not the only price driver.
 
 ![Annual Price Evolution](Hist_4.png)
-![Annual Production Evolution](Figure_4.png)
 Comparing these two boxplots, we observe that while energy prices migrated to a completely different scale in 2022, hydro production remained within historical bounds. This highlights a decoupling of price from local production costs during the energy crisis.
 
 ![Scatter: Production vs Price](Figure_3.png)
