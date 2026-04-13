@@ -1,7 +1,4 @@
-# romanian-energy-market-analysis
-Hydroelectric energy market analysis for Romania (2015-2025):  XGBoost price forecasting, Merit Order modeling,  KMeans clustering and financial performance analysis  of Hidroelectrica S.A. | Python, Pandas, Scikit-Learn, XGBoost
-
- Romanian Energy Market Analysis
+# Romanian Energy Market Analysis
 
 ## Overview
 Analysis of electricity price drivers and Hidroelectrica S.A. 
@@ -9,7 +6,6 @@ financial performance (2015-2025) using machine learning models.
 
 ## Key Results
 - XGBoost R²=0.909 for electricity price prediction (normal market)
-- Merit Order confirmed: EUR/RON dominates with 68% feature importance
 - Crisis regime (2022-2023) identified via KMeans clustering
 
 ## Data Sources
