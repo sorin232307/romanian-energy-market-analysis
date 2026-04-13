@@ -103,8 +103,6 @@ I compared 8 models predicting the monthly Day-Ahead Market price using the full
 | SVR | 0.3837 | 176.37 |
 | LightGBM | 0.2963 | 161.03 |
 
-![](Figure_1.png)
-
 ### Step 6 — Geopolitical Regime Analysis
 When the 2022–2023 period is excluded, model performance improves substantially:
 
