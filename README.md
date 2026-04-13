@@ -1,4 +1,3 @@
-[README.md](https://github.com/user-attachments/files/26685008/README.md)# Romanian Energy Market Analysis
 ### Electricity Price Modeling & Hidroelectrica Financial Performance (2015–2025)
 
 ---
