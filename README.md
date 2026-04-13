@@ -72,9 +72,6 @@ The price distribution (left) is heavily right-skewed with a "fat tail," indicat
 ![Annual Price Evolution](Hist_4.png)
 Comparing these two boxplots, we observe that while energy prices migrated to a completely different scale in 2022, hydro production remained within historical bounds. This highlights a decoupling of price from local production costs during the energy crisis.
 
-![Scatter: Production vs Price](Figure_3.png)
-The scatter plot visualizes the "2022 Anomaly." Most data points follow a horizontal trend, but the 2022 cluster is vertically displaced, showing record-high prices achieved with average production volumes.
-
 ![Correlation Matrix](Hist_5.png)
 The correlation matrix showed that hydro production has a weak negative correlation (-0.25) with electricity prices. This was the main observation that motivated adding more variables.
 
@@ -118,7 +115,13 @@ XGBoost (without 2022–2023): R² = 0.909 | MAE = 32.1 RON/MWh
 This suggests that the underlying market structure is actually quite predictable in normal conditions.
 
 ### Step 7 — Adding Dutch TTF Gas Prices
-Replacing the binary crisis indicator with actual TTF gas prices reduced the Mean Absolute Error by ~34%:
+To move beyond the binary crisis indicator, I added the actual 
+fundamental driver: monthly Dutch TTF natural gas prices, sourced 
+from Yahoo Finance. Both `criza_energetica` and `pret_gas_TTF_euro` 
+were kept in the model — TTF captures the magnitude of the price 
+shock, while the dummy captures the structural regime shift.
+
+Adding TTF reduced the Mean Absolute Error by ~34%
 
 ```
 Baseline XGBoost:       MAE = 101.9 RON/MWh
