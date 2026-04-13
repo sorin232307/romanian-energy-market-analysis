@@ -1,90 +1,105 @@
-# Romanian Energy Market Analysis
-
-## Overview
-Analysis of electricity price drivers and Hidroelectrica S.A. 
-financial performance (2015-2025) using machine learning models.
-
-## Key Results
-- XGBoost R²=0.909 for electricity price prediction (normal market)
-- Crisis regime (2022-2023) identified via KMeans clustering
-
-## Data Sources
-- ENTSO-E Transparency Platform (generation, load, prices)
-- BNR (EUR/RON exchange rate)
-- Hidroelectrica S.A. Annual Reports (2015-2024)
-
-## Models
-| Model | R² | MAE |
-|---|---|---|
-| XGBoost (tuned) | 0.844 | 96.5 |
-| XGBoost (no crisis) | 0.909 | 32.1 |
-| Random Forest | 0.815 | 104.7 |
-| OLS Regression | 0.841 | - |
-
-## Project Overview
-This project presents an in-depth data analysis and predictive modeling of the Romanian energy market, with a primary focus on **forecasting electricity prices on the Day-Ahead Market (DAM/PZU)**. Furthermore, it applies these market predictions to a real-world business case: analyzing the revenue impact on **Hidroelectrica**.
-
-Using Data Science techniques and Machine Learning models, this project explores the "Merit Order" effect. It demonstrates how external shocks—specifically the 2022 European natural gas crisis (TTF)—dictated local electricity prices and consequently boosted hydro-generation revenues, even during periods of lower water availability.
-
-## Technologies Used
-* **Language:** Python 3
-* **Data Manipulation:** `pandas`, `numpy`
-* **Data Visualization:** `matplotlib`, `seaborn` 
-* **Machine Learning:** `scikit-learn`, `xgboost` 
-* **Data Sourcing:** Yahoo Finance (`yfinance`)
-
-## 📊 Data Exploration & Key Insights (EDA)
-
-### Data Distributions: Price vs. Production
-![Distributions](Hist_1.png)
-
-* **Price Distribution (Left):** The histogram for electricity prices (`pret_energie_ron_mwh`) shows a heavily right-skewed distribution. Most of the time, prices hover in a "normal" range. However, the long tail extending far to the right clearly captures the extreme market volatility and price shocks, most notably the unprecedented spikes seen during the 2022 energy crisis.
-
-### Lunar Seasonality: The "Hydrological Footprint"
-![Seasonality Price](Hist_2.png)
-![Seasonality Production](Hist_3.png)
-
-* **Production Seasonality (Hist_3):** This boxplot perfectly illustrates Romania's "hydrological footprint." We observe significantly higher median production and greater variance in the spring months (March - May), driven by snowmelt and spring rains. Conversely, autumn months (September - November) show tighter distributions and lower medians, reflecting typical dry spells.
-* **Price Seasonality (Hist_2):** Interestingly, the price seasonality does not perfectly mirror production. While prices tend to be lower during the high-production spring months (showing basic supply-demand mechanics), we see massive outliers in late summer and autumn (specifically August and September). This suggests that factors *other* than hydro supply (such as European gas prices and increased cooling demand) dictate the price peaks.
-
-### Annual Evolution and The 2022 Anomaly
-![Annual Evolution](Hist_4.png)
-
-* **Annual View:** Looking at the data grouped by year, the boxplots reveal a stable market from 2018 to 2020. However, starting in late 2021 and exploding in 2022, the median price skyrockets, and the interquartile range stretches massively.
-* **The Disconnect:** When comparing the annual price boxplot to the annual production boxplot, the disconnect is clear. The record-high prices of 2022 occurred during a year with relatively average (or even slightly below-average) hydro production. This proves that Hidroelectrica's massive revenues during that period were driven entirely by external market forces (the Merit Order effect), not by increased operational output.
-
-### Correlation Analysis: The Missing Link
-![Correlation Matrix](Hist_5.png)
-* **The Heatmap:** We used a correlation matrix to test how strongly the local supply of water influences the final Day-Ahead Market price.
-* **The Finding:** Surprisingly, there is a relatively weak inverse correlation between hydro production volume and the market price. In a standard market, abundant cheap hydro energy should drive overall prices down significantly, but our data shows this isn't the case.
-* **Next Steps:** The fact that local water supply does not dictate the market price was the main motivation for our Machine Learning phase. This anomaly prompted us to integrate European Natural Gas (TTF) data into our predictive models to uncover the true underlying driver of electricity prices.
-
-## Statistical Modeling (OLS Regression)
-
-We executed an Ordinary Least Squares (OLS) regression to model Hidroelectrica's revenues based on production, price, and currency rates.
-
-**Key Statistical Metrics:**
-* **R-squared:** 0.841
-* **Adjusted R-squared:** 0.761
-* **Condition Number:** 5.40e+08 (indicating significant multicollinearity).
-
-**Coefficients:**
-| Variable | Coefficient | P-Value |
-| :--- | :--- | :--- |
-| `productie_hidro_totala_mwh` | 0.0008 | 0.077 |
-| `pret_energie_ron_mwh` | 4.5834 | 0.053 |
-| `eur_ron_mediu` | 10280.7 | 0.017 |
+[README.md](https://github.com/user-attachments/files/26685008/README.md)# Romanian Energy Market Analysis
+### Electricity Price Modeling & Hidroelectrica Financial Performance (2015–2025)
 
 ---
 
-## Machine Learning Models (Stage 1)
+## About This Project
 
-### Model Comparison (Baseline)
-We integrated the full energy mix (Wind, Solar, Nuclear, Coal, Gas production) to predict the PZU price. We tested 8 different algorithms:
+This project started as a university assignment for a Software Packages course (Statistics, Year 2, ASE Bucharest) and grew into something I found genuinely interesting.
 
-| Model | R² Score | MAE (RON/MWh) |
-| :--- | :--- | :--- |
-| **XGBoost** | **0.8309** | **101.98** |
+The central question is simple: **what actually drives electricity prices in Romania?** Is it how much water flows through Hidroelectrica's turbines, or is something else going on?
+
+To answer this, I collected real data from three public sources, cleaned and merged it in Python, and tested several statistical and machine learning models. The results pointed to something I didn't expect at the beginning: local hydro production has a surprisingly weak correlation with electricity prices. The dominant driver, especially after 2021, turned out to be **European natural gas prices (Dutch TTF)**.
+
+---
+
+## Data Sources
+
+| Source | What I Used |
+|---|---|
+| [ENTSO-E Transparency Platform](https://transparency.entsoe.eu) | Hourly generation by type (hydro, wind, solar, gas, coal, nuclear), national load — 2015 to 2025 |
+| [BNR (National Bank of Romania)](https://www.bnr.ro) | Daily EUR/RON exchange rate — 2015 to 2025 |
+| [Hidroelectrica S.A. Annual Reports](https://www.hidroelectrica.ro) | Revenue, EBITDA, net profit — 2015 to 2024 |
+| [Yahoo Finance (yfinance)](https://finance.yahoo.com) | Dutch TTF Natural Gas monthly prices — 2017 to 2025 |
+
+All data was downloaded manually or via API, cleaned in Python, and aggregated to monthly frequency before modeling.
+
+---
+
+## Structure
+
+```
+├── Date_brute/                   # Raw downloaded files
+│   ├── BNR/
+│   ├── entso_productie/          # Generation CSVs by year
+│   ├── entso_preturi/            # Day-ahead price CSVs by year
+│   └── Load/
+├── Date_curate/                  # Cleaned, monthly aggregated files
+│   ├── eur_ron_lunar.csv
+│   ├── preturi_energie_lunare.csv
+│   ├── productie_hidro_lunara.csv
+│   ├── financiar_hidro.csv
+│   └── date_analiza_finala.csv
+├── curatare_date_bnr.py
+├── curatare_date_productie.py
+├── curatare_date_pret.py
+├── agregare_date.py
+├── Analiza_stats.py              # OLS regression (statsmodels)
+├── clustering.py                 # KMeans + Logistic Regression
+├── Analiza_RandomForest.py       # RF, Lasso, ElasticNet comparison
+├── histograme.py                 # EDA visualizations
+├── Hidroelectrica.py             # Revenue: real vs. estimated
+├── XGB.ipynb                     # XGBoost model comparison + tuning
+└── gas.ipynb                     # TTF gas integration
+```
+
+---
+
+## Methodology
+
+### Step 1 — Data Cleaning
+The raw ENTSO-E files presented a practical problem: generation data before 2022 was recorded at hourly intervals, while 2022 onwards switched to 15-minute intervals. Simply summing the values would have made post-2021 production appear four times larger. I resolved this by computing the duration of each interval from the timestamps directly and converting MW to MWh accordingly.
+
+### Step 2 — EDA
+Before any modeling, I looked at distributions, seasonality, and correlations. 
+![Price and Production Distributions](Hist_1.png)
+The price distribution (left) is heavily right-skewed with a "fat tail," indicating high volatility and extreme price spikes during the 2022 crisis.
+
+![Monthly Price Variation](Hist_2.png)
+![Monthly Production Variation](Hist_3.png)
+* **Production (`Hist_3`):** Confirms the "hydrological footprint" of Romania, with peak production in spring (March-May) due to snowmelt and lower volumes in late summer.
+* **Price (`Hist_2`):** Shows that while production peaks in spring, prices do not always drop proportionally. The highest outliers are recorded in August and September, suggesting that supply-side hydro production is not the only price driver.
+
+![Annual Price Evolution](Hist_4.png)
+![Annual Production Evolution](Figure_4.png)
+Comparing these two boxplots, we observe that while energy prices migrated to a completely different scale in 2022, hydro production remained within historical bounds. This highlights a decoupling of price from local production costs during the energy crisis.
+
+![Scatter: Production vs Price](Figure_3.png)
+The scatter plot visualizes the "2022 Anomaly." Most data points follow a horizontal trend, but the 2022 cluster is vertically displaced, showing record-high prices achieved with average production volumes.
+
+![Correlation Matrix](Hist_5.png)
+The correlation matrix showed that hydro production has a weak negative correlation (-0.25) with electricity prices. This was the main observation that motivated adding more variables.
+
+### Step 3 — OLS Regression (statsmodels)
+I started with a simple OLS model on the 10 annual observations for Hidroelectrica's revenue:
+
+```
+Revenue = f(hydro_production, electricity_price, EUR/RON)
+R² = 0.841 | Adj. R² = 0.761
+```
+
+The results are statistically limited by the small sample (10 years), but the model confirms that EUR/RON is the only individually significant predictor (p = 0.017).
+
+### Step 4 — Clustering (KMeans)
+Using monthly data (132 observations), I applied KMeans with 3 clusters on production, price, and exchange rate. The algorithm unsupervised-ly isolated 2022 as a separate regime — all 12 months of 2022 ended up in a single cluster characterized by extreme prices (avg. 1,232 RON/MWh), confirming the geopolitical shock as a distinct market state.
+![](Figure_2.png)
+
+### Step 5 — Machine Learning (Price Forecasting)
+I compared 8 models predicting the monthly Day-Ahead Market price using the full energy mix as features:
+
+| Model | R² | MAE (RON/MWh) |
+|---|---|---|
+| XGBoost | 0.8309 | 101.98 |
 | Random Forest | 0.8157 | 104.76 |
 | Gradient Boosting | 0.7994 | 111.26 |
 | CatBoost | 0.7449 | 96.17 |
@@ -93,55 +108,84 @@ We integrated the full energy mix (Wind, Solar, Nuclear, Coal, Gas production) t
 | SVR | 0.3837 | 176.37 |
 | LightGBM | 0.2963 | 161.03 |
 
-**Observation:** While XGBoost provided a high R², the Mean Absolute Error (MAE) of ~102 RON was too high for reliable financial forecasting.
+![](Figure_1.png)
+
+### Step 6 — Geopolitical Regime Analysis
+When the 2022–2023 period is excluded, model performance improves substantially:
+
+```
+XGBoost (without 2022–2023): R² = 0.909 | MAE = 32.1 RON/MWh
+```
+
+This suggests that the underlying market structure is actually quite predictable in normal conditions.
+
+### Step 7 — Adding Dutch TTF Gas Prices
+Replacing the binary crisis indicator with actual TTF gas prices reduced the Mean Absolute Error by ~34%:
+
+```
+Baseline XGBoost:       MAE = 101.9 RON/MWh
+XGBoost + TTF:          MAE = 67.5  RON/MWh
+XGBoost + TTF (tuned):  MAE = ~65   RON/MWh | R² ≈ 0.84
+```
+
+The feature importance in the final model confirms that **TTF gas is the dominant predictor** of Romanian electricity prices, which is consistent with the Merit Order mechanism — gas-fired plants set the marginal price in a large share of hours.
+
+![](Figure_3.png)
+
+### Step 8 — Hidroelectrica Revenue Analysis
+
+Using the predicted electricity prices, I estimated what Hidroelectrica's 
+revenues *would have been* if all production had been sold at the spot 
+market price (PZU), and compared this against the actual reported revenues.
+
+![Revenue: Reported vs. Spot Estimate](Figure_4.png)
+*In 2022, the spot market estimate (blue) far exceeds reported revenues 
+(purple), suggesting a significant portion of output was already sold 
+under long-term bilateral contracts at pre-crisis prices. From 2023 
+onward, the gap narrows as contracts were renegotiated.*
+
+I also attempted a monthly revenue forecast using a Ridge regression 
+model with lag features — using last month's production and price 
+to predict next month's revenue.
+
+![Monthly Revenue Forecast (Ridge)](Figure_5.png)
+*The model captures the general seasonal trend but struggles with 
+sharp month-to-month swings. This is expected given that monthly 
+revenues depend on contract structure, which is not publicly available.*
+---
+
+## Key Findings
+
+1. **Hydro production alone does not explain electricity prices.** The correlation is weak (-0.25), and models built only on hydro variables perform poorly.
+
+2. **The 2022 energy crisis is a distinct market regime.** KMeans clustering identified it automatically without being told which year was anomalous.
+
+3. **European gas prices (TTF) are the primary driver of Romanian electricity prices**, even though Romania has significant renewable capacity. This reflects the country's integration into the European market and the Merit Order pricing mechanism.
+
+4. **Hidroelectrica's record revenues in 2022–2023 were driven by external market forces**, not by exceptional hydro output. The comparison between reported revenues and spot-market estimates (production × price) shows the company consistently sells below full spot potential, likely due to long-term bilateral contracts.
+
+5. **XGBoost outperformed all other models tested**, including other gradient boosting variants, with the best balance of R² and MAE.
 
 ---
 
-## Feature Engineering and Geopolitical Shock Analysis
+## Limitations
 
-### The "Energy Crisis" Dummy Variable
-To account for the war in Ukraine and the gas supply shock, we introduced a binary (dummy) variable: `criza_energetica`.
-* **Value 1:** Late 2021 - Early 2023.
-* **Value 0:** Normal market conditions.
-
-![Impact of Crisis Dummy](Figure_2.png)
-The model's ability to follow the extreme spikes improved significantly (as seen in `Figure_2`). By "flagging" the crisis, the model stopped treating the 2022 spikes as random noise and started treating them as a specific market state.
-
-### Removing Crisis Outliers
-When we removed the 2022-2023 period to test the model's performance in "stable" conditions, the results were excellent:
-* **R²:** 0.908
-* **MAE:** 32.10 RON/MWh
-This proved that our features (Energy Mix + EUR/RON) are near-perfect predictors when external geopolitical shocks are not present.
+- **Small sample for financial modeling:** 10 annual observations for Hidroelectrica's financials limits statistical inference. The OLS coefficients should be interpreted with caution.
+- **TTF data availability:** Yahoo Finance TTF data starts from late 2017, limiting the final model's training window.
+- **No forward-looking validation:** All models are trained and tested on historical data. No out-of-sample forecasting was attempted.
+- **criza_energetica as a dummy variable:** In the baseline ML model, using a manually defined crisis indicator constitutes a form of look-ahead bias. This is appropriate for retrospective analysis but would not be usable in a real-time forecasting context.
 
 ---
 
-## Final Model: Integration of Dutch TTF Gas
+## Technologies
 
-The final and most accurate version of the model replaced the binary dummy variable with the actual fundamental driver: **Dutch TTF Gas Prices**.
-
-### Hyperparameter Tuning (XGBoost)
-Using `GridSearchCV`, we identified the optimal configuration:
-* `learning_rate`: 0.01
-* `max_depth`: 5
-* `n_estimators`: 300
-* `subsample`: 0.8
-
-### Results: R² vs. MAE Analysis
-![Final Results: Prediction vs. Importance](Figure_5.png)
-
-**The MAE Victory:**
-This is the most critical finding of the project. When comparing the baseline model to the final model (with TTF Gas):
-1. **Baseline Model:** R² = 0.83 | **MAE = 101.9 RON**
-2. **Final Model (with TTF):** R² = 0.83 | **MAE = 67.5 RON**
-
-**Conclusion:** Although the R² score (which measures variance) remained similar, the **Mean Absolute Error (MAE) dropped by 34%**. In energy trading and revenue forecasting, reducing the absolute error (the actual RON difference) is far more valuable than a theoretical R² percentage. 
-
-### Feature Importance
-The final analysis (`Figure_5`, right) confirms that **TTF Gas Prices** is the most dominant feature in determining electricity prices in Romania, proving the "Merit Order" effect where gas-fired plants set the marginal price for the entire market.
+- Python 3.13
+- pandas, numpy
+- scikit-learn (KMeans, RandomForest, Lasso, ElasticNet, LogisticRegression, GridSearchCV)
+- xgboost, lightgbm, catboost
+- statsmodels (OLS)
+- matplotlib, seaborn
+- yfinance
 
 ---
 
-## 8. Conclusions
-* **Primary Driver:** European gas prices (TTF) dictate the Romanian PZU price more than local hydro production.
-* **Model Selection:** Gradient Boosting models (XGBoost) are superior to linear models in handling energy market volatility.
-* **Forecasting Value:** By including TTF data and crisis indicators, we reduced the forecasting error to a level that allows for meaningful financial planning (MAE 67.5 RON down to 32.1 RON in stable periods).
