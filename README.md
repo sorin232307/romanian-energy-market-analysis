@@ -86,7 +86,7 @@ R² = 0.841 | Adj. R² = 0.761
 The results are statistically limited by the small sample (10 years), but the model confirms that EUR/RON is the only individually significant predictor (p = 0.017).
 
 ### Step 4 — Clustering (KMeans)
-Using monthly data (132 observations), I applied KMeans with 3 clusters on production, price, and exchange rate. The algorithm unsupervised-ly isolated 2022 as a separate regime — all 12 months of 2022 ended up in a single cluster characterized by extreme prices (avg. 1,232 RON/MWh), confirming the geopolitical shock as a distinct market state.
+Using monthly data (132 observations), I applied KMeans with 3 clusters on production, price, and exchange rate. The unsupervised algorithm isolated 2022 as a separate regime — all 12 months of 2022 ended up in a single cluster characterized by extreme prices (avg. 1,232 RON/MWh), confirming the geopolitical shock as a distinct market state.
 ![](images/Figure_2.png)
 
 ### Step 5 — Machine Learning (Price Forecasting)
